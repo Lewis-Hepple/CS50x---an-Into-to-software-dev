@@ -1,0 +1,24 @@
+sort1 uses: TODO
+
+How do you know?: TODO
+
+sort2 uses: TODO
+
+How do you know?: TODO
+
+sort3 uses: TODO
+
+How do you know?: TODO
+
+
+sort 1 reversed  .501
+sort 1 random .571
+sort 1 sorted .017
+
+sort2 reversed .097
+sort2 random .022
+sort 2 sorted .093
+
+sort 3 reversed .329
+sort3 random .330
+sort 3 sorted .177

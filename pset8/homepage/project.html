@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <link href="styles.css" rel="stylesheet">
+        <title>Lewis Hepple</title>
+    </head>
+
+    <body class='body'>
+        <h class = "project_page">
+                <h1 class = 'title'>
+                    Here is some samples of the last few projects I have worked on:
+                </h1>
+        </h>
+        <div class = 'p1'>
+            <h1 class ='title_project' color: white>
+                Python Project Testing dna strings against a database of people with specific amount of STR repeats:
+            </h1>
+            <pre class='content_project'>
+                <code>
+import sys from csv import DictReader
+
+
+def main():
+    # checks command for proper amount of args
+    if len(sys.argv) != 3:
+        print("Usage: python dna.py data.csv sequence.txt")
+        sys.exit()
+
+# opens and reads database
+    try:
+        rawdata = open(sys.argv[1], newline='')
+        data = DictReader(rawdata)
+    except:
+        print("couldnt open/read Database")
+        sys.exit()
+
+# opens and reads DNA
+    try:
+        dnaraw = open(sys.argv[2])
+        dna = dnaraw.read()
+    except:
+        print("couldnt open/read DNA strip")
+        sys.exit()
+
+# initialises counter
+    strcount = {}
+
+# loops each STR and checks for it in DNA. if found it check for more consecutives and adds to temp count.
+# when temp count is larger than max count it updates max count. and then makes a dictionary corrolating STR to max count
+    for i in data.fieldnames[1:]:
+        x = 0
+        countmax = 0
+
+        for j in range(len(dna) - len(i)):
+            count = 0
+            x = j
+            while i in dna[x: len(i) + x]:
+                count += 1
+                if count > countmax:
+                    countmax = count
+                x += len(i)
+
+        strcount[i] = countmax
+
+# itterates over Database to find and print a match. if there is no match then print no match
+    for row in data:
+        count = 0
+
+        for i in data.fieldnames[1:]:
+            if f"{row[i]}" == f"{strcount[i]}":
+                count += 1
+
+            if count == len(data.fieldnames[1:]):
+                print(f"{row[data.fieldnames[0]]}")
+                sys.exit()
+
+    print("No match")
+    sys.exit()
+
+
+main()
+
+                </code>
+            </pre>
+            <h class='title_project'>
+                Here I implement the functions for spell checker which takes arguments when another file opens and feeds words from a dictionary and then a text.
+            </h>
+            <pre>
+                <p class='content_project'>
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <math.h>
+#include <strings.h>
+#include <string.h>
+
+#include "dictionary.h"
+
+// Represents a node in a hash table
+typedef struct node
+{
+    char alpha[LENGTH + 1];
+    struct node *next;
+}
+node;
+
+// Number of buckets in hash table
+const unsigned int N = 531441;
+
+
+// Hash table
+node *table[N];
+
+// dictionary word count
+unsigned int DIC_COUNT = 0;
+
+// Returns true if word is in dictionary, else false
+bool check(const char *word)
+{
+    // checks if inputed word is found in dictionary and reurns true if found, esle false
+    int h = hash(word);
+    node *temp = table[h];
+
+    while (temp != NULL)
+    {
+        if (strcasecmp(temp -> alpha, word) == 0)
+        {
+            return true;
+        }
+        temp = temp -> next;
+    }
+
+    return false;
+}
+
+// Hashes word to a number
+unsigned int hash(const char *word)
+{
+    // function returns a value which is HASHED from the first 4 letters of the supplied word.
+    //   '''' = 0     '''a = 1    '''b = 2    zzzz = 531440
+    int h = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        //condition if word[i] == '
+        if (word[i] == 39)
+        {
+            continue;
+        }
+
+        if (isalpha(word[i]))
+        {
+            h += (tolower(word[i]) - 96) * pow(27, 3 - i);
+        }
+
+        // if end of word stop adding  (hash("a") ==  hash("a''"))
+        else
+        {
+            break;
+        }
+    }
+    return h;
+}
+
+// Loads dictionary into memory, returning true if successful, else false
+bool load(const char *dictionary)
+{
+
+    // initialising Hash table to null
+    for (int n = 0; n < N ; n++)
+    {
+        table[n] = NULL;
+    }
+
+    char buffer[LENGTH + 1];
+
+// Open dictionary file
+    FILE *letter = fopen(dictionary, "r");
+    if (letter == NULL)
+    {
+        return false;
+    }
+
+// find strings in dictionary file.  call hash function and input string into a new struct node in the corresponding place in the hash table
+    while (fscanf(letter, "%s", buffer) != EOF)
+    {
+        node *newword = malloc(sizeof(node));
+        if (newword == NULL)
+        {
+            free(newword);
+            printf("couldnt load new dictionary word");
+            return false;
+        }
+
+        strcpy(newword -> alpha, buffer);
+        int hashed = hash(buffer);
+        newword -> next = table[hashed];
+        table[hashed] = newword;
+        DIC_COUNT++;
+    }
+    fclose(letter);
+    return true;
+}
+
+
+// Returns number of words in dictionary if loaded, else 0 if not yet loaded
+unsigned int size(void)
+{
+    return DIC_COUNT;
+}
+
+// Unloads dictionary from memory, returning true if successful, else false
+bool unload(void)
+{
+    for (int i = 0; i < N; i++)
+    {
+        while (table[i] != NULL)
+        {
+            node *temp = table[i];
+            table[i] = table[i] -> next;
+            free(temp);
+        }
+        if (i == N - 1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+                </p>
+            </pre>
+        </div>
+
+
+    </body>
+</html>

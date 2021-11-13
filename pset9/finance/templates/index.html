@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead class='thead-dark'>
+            <tr><th colspan='4'>{{ username }}'s Summary </th></tr>
+        </thead>
+        <thead class="thead-light">
+            <tr>
+                <th>Cash Available</th>
+                <th>Cash Invested</th>
+                <th colspan='2'>Grand Total</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>{{ cash }}</td>
+            <td>{{ invested }}</td>
+            <td colspan='2'>{{ grandtotal }}</td>
+        </tr>
+    </table>
+    <table class='table table-hover'>
+        <thead class='thead-dark'>
+            <tr><th colspan='6'>{{ username }}'s Investments </th></tr>
+        </thead>
+        <thead class="thead-light">
+            <tr>
+                <th>Stock Name (symbol)</th>
+                <th>Number of Shares</th>
+                <th>Current Stock Price</th>
+                <th>Total Value</th>
+                <th colspan='2'>BUY / SELL</th>
+
+            </tr>
+        </thead>
+        {% for row in info %}
+            <tr>
+                <td>{{ row['name'] }} ({{ row['symbol'] }})</td>
+                <td>{{ row['shares'] }}</td>
+                <td>{{ row['price'] }}</td>
+                <td>{{ row['total'] }}</td>
+                <td><form action='/buy' method='POST'><input hidden name='symbol' value="{{row['symbol'] }}"> <input class="form-control-index" name="shares" placeholder="Amount" type="number" min='1' step='1'><button class="form-control btn btn-outline-info btn-sm" type="submit">Buy</button></form></td>
+                <td><form action='/sell' method='POST'><input hidden name='symbol' value="{{row['symbol'] }}"><input class="form-control-index" name="shares" placeholder="Amount" type="number" min='1' step='1'><button class="form-control btn btn-outline-info btn-sm" type="submit">Sell</button></form></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

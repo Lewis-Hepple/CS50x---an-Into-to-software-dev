@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+
+    <table class="table table-hover">
+        <thead class='thead-dark'>
+            <tr><th colspan='6'>{{ username }}'s Transaction History </th></tr>
+        </thead>
+        <thead class="thead-light">
+            <tr>
+                <th>Buy / Sell</th>
+                <th>Stock Name (symbol)</th>
+                <th>Number of Shares</th>
+                <th>Value at Transaction</th>
+                <th>Transaction Value</th>
+                <th>Date and Time</th>
+            </tr>
+        </thead>
+        {% for row in history %}
+            <tr>
+                <th scope='row'>{{ row["type"] }}</th>
+                <td>{{ row["shareSymbol"] }}</td>
+                <td>{{ row["shareAmount"] }}</td>
+                <td>{{ row["sharePrice"] | usd }}</td>
+                <td>{{ row["totalPrice"] | usd }}</td>
+                <td>{{ row["date"] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}

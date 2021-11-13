@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th>Stock Name</th>
+                <th>Stock Price</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>{{name}}</td>
+            <td>{{price}}</td>
+        </tr>
+    </table>
+{% endblock %}

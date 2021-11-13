@@ -1,0 +1,1 @@
+SELECT birth FROM people WHERE upper(name)=upper("Emma Stone");
